@@ -21,3 +21,10 @@ class MessageTagListsSerializer(serializers.ModelSerializer):
     class Meta:
         model = MessageTagList
         fields = "__all__"
+
+    def save(self, **kwargs):
+        # 使用指定数据库
+        # kwargs.update({'using': 'esb_msg'})
+        return super().save(**kwargs)
+
+

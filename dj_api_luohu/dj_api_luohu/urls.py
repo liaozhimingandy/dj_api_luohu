@@ -43,7 +43,9 @@ router = DefaultRouter()
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    # 对测试友好
     re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    # 对开发友好
     re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     re_path('api/', include(router.urls)),
     re_path('^api/esb_msg/', include(esb_msg_urls)),

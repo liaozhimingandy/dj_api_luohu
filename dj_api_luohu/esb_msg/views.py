@@ -3,6 +3,8 @@ import json
 from django.shortcuts import render
 
 # Create your views here.
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status, viewsets
@@ -12,16 +14,7 @@ from .models import MessageTagList
 from .serializer import MessageTagListsSerializer
 
 
-def parse_data_for_msg(data: dict) -> dict:
-    mtlTag, mtlText = '', ''
-    for d in data.get('message').get('LAB_APPLY'):
-        if d.get('DATA_ELEMENT_EN_NAME', '') == 'BAR_CODE':
-            mtlTag = d.get('DATA_ELEMENT_VALUE', '')
-            mtlText = d.get('DATA_ELEMENT_NAME', '')
-
-            return {'mtlTag': mtlTag, 'mtlText': mtlText}
-
-    return {}
+from .utils import CommonParse
 
 
 @api_view(['GET'])
@@ -30,17 +23,36 @@ def demo(request):
     return Response(data)
 
 
-class MessageTagListViewSet(viewsets.ModelViewSet):
+class MessageTagListViewSet(viewsets.ViewSet):
     queryset = MessageTagList.objects.all()
     serializer_class = MessageTagListsSerializer
 
+    @swagger_auto_schema(
+        operation_id='make_tag_for_msg',
+        operation_summary='消息标签',
+        operation_description='为消息并且解析出标签',
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            description='交互消息体'
+        ),
+        manual_parameters=[
+          openapi.Parameter('msg_id', openapi.IN_QUERY, description="消息id", type=openapi.TYPE_STRING, required=True)
+        ],
+        responses={201: '已保存', 401: '未认证', 500: '服务器内部错误'}
+    )
     @action(detail=False, methods=['POST'], name='make_tag')
     def make_tag_for_msg(self, request):
-        data = parse_data_for_msg(request.data)
+        # 判断消息体是否为空
+        if not request.data:
+            return Response(status=status.HTTP_402_PAYMENT_REQUIRED, data={'code': 402, 'msg': '需要交互消息'})
+        # 按需转换成json数据
+        data = CommonParse.parse_data_for_msg(request.data)
         data['MSG_ID'] = request.GET.get('msg_id')
 
+        # 反序列化
         serializer = MessageTagListsSerializer(data=data)
-        serializer.is_valid()
+        serializer.is_valid(raise_exception=True)
+
         # 保存到数据库
-        # serializer.save()
-        return Response(data)
+        serializer.save()
+        return Response({'code': 200, 'msg': '保存成功'})
