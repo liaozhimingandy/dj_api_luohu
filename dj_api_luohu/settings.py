@@ -40,7 +40,7 @@ INSTALLED_APPS = [
 
     # 第三方app
     'rest_framework',  # api框架
-    'drf_yasg',  # api文档工具
+    'drf_yasg2',  # api文档工具
     "django_comment_migrate",
 
     # 自定义app
