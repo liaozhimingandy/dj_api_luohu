@@ -47,6 +47,11 @@ class MessageTagListViewSet(viewsets.ViewSet):
             return Response(status=status.HTTP_402_PAYMENT_REQUIRED, data={'code': 402, 'msg': '需要交互消息'})
         # 按需转换成json数据
         data = CommonParse.parse_data_for_msg(request.data)
+
+        # 是否解析标签成功
+        if data.get('mtlTag') == '':
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'code': 400, 'msg': '不需要解析的数据或未解析成功'})
+
         data['MSG_ID'] = request.GET.get('msg_id')
 
         # 反序列化

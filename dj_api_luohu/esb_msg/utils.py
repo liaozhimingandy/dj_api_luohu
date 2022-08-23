@@ -33,6 +33,11 @@ class CommonParse:
                     mtlTag = d.get('DATA_ELEMENT_VALUE', '')
                     mtlText = d.get('DATA_ELEMENT_NAME', '')
 
-                    return {'mtlTag': mtlTag, 'mtlText': mtlText}
+        # 检验申请单查询
+        elif server_code in ('S0040', ):
+            for d in data.get('query').get('LAB_APPLY'):
+                if d.get('DATA_ELEMENT_EN_NAME', '') == 'BAR_CODE':
+                    mtlTag = d.get('DATA_ELEMENT_VALUE', '')
+                    mtlText = d.get('DATA_ELEMENT_NAME', '')
 
-        return {}
+        return {'mtlTag': mtlTag, 'mtlText': mtlText}
