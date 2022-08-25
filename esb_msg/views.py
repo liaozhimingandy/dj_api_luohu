@@ -44,13 +44,15 @@ class MessageTagListViewSet(viewsets.ViewSet):
     def make_tag_for_msg(self, request):
         # 判断消息体是否为空
         if not request.data:
-            return Response(status=status.HTTP_402_PAYMENT_REQUIRED, data={'code': 402, 'msg': '需要交互消息'})
+            return Response(status=status.HTTP_204_NO_CONTENT, data={'code': status.HTTP_204_NO_CONTENT,
+                                                                     'msg': '需要交互消息'})
         # 按需转换成json数据
         data = CommonParse.parse_data_for_msg(request.data)
 
         # 是否解析标签成功
         if data.get('mtlTag') == '':
-            return Response(status=status.HTTP_400_BAD_REQUEST, data={'code': 400, 'msg': '不需要解析的数据或未解析成功'})
+            return Response(status=status.HTTP_202_ACCEPTED, data={'code': status.HTTP_202_ACCEPTED,
+                                                                   'msg': '不需要解析的数据或未解析成功'})
 
         data['MSG_ID'] = request.GET.get('msg_id')
 
@@ -60,4 +62,5 @@ class MessageTagListViewSet(viewsets.ViewSet):
 
         # 保存到数据库
         serializer.save()
-        return Response({'code': 200, 'msg': '保存成功'})
+
+        return Response(status=status.HTTP_200_OK, data={'code': status.HTTP_201_CREATED, 'msg': '保存成功'})

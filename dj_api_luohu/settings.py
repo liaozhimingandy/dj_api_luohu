@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +20,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^xs70#xch%!em*b#%)jp!$&69m=ttoek&6_@cm-sgj%7ia!r80'
+SECRET_KEY = os.getenv(
+    "SECRET_KEY", "django-insecure-^xs70#xch%!em*b#%)jp!$&69m=ttoek&6_@cm-sgj%7ia!r80"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = int(os.environ.get("DEBUG", default=1))
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(" ")
 
-ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "http://*").split(" ")
 
 
 # Application definition
@@ -123,7 +126,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
+# static目录配置
 STATIC_URL = 'static/'
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+# python manage.py collectstatic 收集文件到下面文件文件夹里
+STATIC_ROOT = os.path.join(BASE_DIR, "assets")
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -145,6 +154,12 @@ REST_FRAMEWORK = {
         # 'rest_framework.permissions.IsAuthenticated',  # 认证用户可以访问
         # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',  # 认证用户可以访问, 否则只能读取 authentication: Bearer [token]访问接口
         'rest_framework.permissions.AllowAny',  # 所有用户都可以访问
+    ),
+    # 3.渲染器
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        # 'rest_framework_xml.renderers.XMLRenderer',
     ),
 }
 #
