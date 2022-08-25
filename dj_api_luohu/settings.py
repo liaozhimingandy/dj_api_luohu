@@ -86,14 +86,6 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     },
-    'esb_msg': {
-        'ENGINE': 'mssql',  # 添加mssql
-        'NAME': 'ESB_MSG-B',  # 数据库名
-        'USER': 'caradigm',  # 你的数据库user
-        'PASSWORD': 'Knt2020@lh',  # 你的数据库password
-        'HOST': '172.16.33.183',  # 开发的时候，使用localhost
-        'PORT': '1433',  # 默认3306
-    }
 }
 
 
@@ -155,11 +147,11 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',  # 所有用户都可以访问
     ),
 }
-
-DATABASE_APPS_MAPPING = {
-    # >python manage.py makemigrations esb_msg
-    # >python manage.py migrate esb_msg --database=esb_msg
-    # 关联数据库:
-    # 'app_name':'database_name',
-    'esb_msg': 'esb_msg',
-}
+#
+# DATABASE_APPS_MAPPING = {
+#     # >python manage.py makemigrations esb_msg
+#     # >python manage.py migrate esb_msg --database=esb_msg
+#     # 关联数据库:
+#     # 'app_name':'database_name',
+#     'esb_msg': 'esb_msg',
+# }
