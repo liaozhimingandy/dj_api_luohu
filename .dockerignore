@@ -1,0 +1,7 @@
+/docker-compose.yaml
+/.dockerignore
+/.gitignore
+/db.sqlite3
+/Dockerfile
+/assets/*
+/venv/*

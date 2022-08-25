@@ -46,7 +46,7 @@ class MessageTagListViewSet(viewsets.ViewSet):
         if not request.data:
             return Response(status=status.HTTP_204_NO_CONTENT, data={'code': status.HTTP_204_NO_CONTENT,
                                                                      'msg': '需要交互消息'})
-        # 按需转换成json数据
+        # 给消息打标签
         data = CommonParse.parse_data_for_msg(request.data)
 
         # 是否解析标签成功

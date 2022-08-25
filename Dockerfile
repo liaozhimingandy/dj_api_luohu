@@ -7,15 +7,14 @@ ENV PYTHONUNBUFFERED=1
 RUN pip install -U pip setuptools wheel -i https://mirrors.aliyun.com/pypi/simple/ || \
     pip install -U pip setuptools wheel
 
-RUN mkdir /usr/src/app
-WORKDIR /usr/src/app
-COPY requirements.txt /usr/src/app 
+RUN mkdir /opt/app
+WORKDIR /opt/app
+COPY . /opt/app
 
 RUN pip install -i https://mirrors.aliyun.com/pypi/simple/ -r requirements.txt || \
     pip install -r requirements.txt
 
-COPY config /usr/src/config
-
 RUN ["chmod", "+x", "/opt/app/config/entrypoint.sh"]
+
 # run entrypoint.sh
 ENTRYPOINT ["/opt/app/config/entrypoint.sh"]

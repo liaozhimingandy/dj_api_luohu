@@ -35,6 +35,7 @@ schema_view = get_schema_view(
    ),
    public=True,
    permission_classes=[permissions.AllowAny],
+
 )
 
 # api根路由
@@ -48,5 +49,5 @@ urlpatterns = [
     # 对开发友好
     re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     re_path('api/', include(router.urls)),
-    re_path('^api/esb_msg/', include(esb_msg_urls)),
+    re_path('^api/esb/', include(esb_msg_urls)),
 ]
