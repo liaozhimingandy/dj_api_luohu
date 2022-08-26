@@ -1,5 +1,7 @@
+import datetime
 import json
 
+import pytz
 from django.shortcuts import render
 
 # Create your views here.
@@ -42,17 +44,24 @@ class MessageTagListViewSet(viewsets.ViewSet):
     )
     @action(detail=False, methods=['POST'], name='make_tag')
     def make_tag_for_msg(self, request):
+        gmt_created = datetime.datetime.now(tz=pytz.timezone('Asia/Shanghai')).isoformat(sep='T', timespec='seconds')
         # 判断消息体是否为空
         if not request.data:
             return Response(status=status.HTTP_204_NO_CONTENT, data={'code': status.HTTP_204_NO_CONTENT,
-                                                                     'msg': '需要交互消息'})
+                                                                     'msg': '需要交互消息', 'gmt_created': gmt_created})
         # 给消息打标签
-        data = CommonParse.parse_data_for_msg(request.data)
+        try:
+            data = CommonParse.parse_data_for_msg(request.data)
+        except (Exception, ) as e:
+            return Response(status=status.HTTP_406_NOT_ACCEPTABLE, data={'code': status.HTTP_406_NOT_ACCEPTABLE,
+                                                                         'msg': f'意外的json结构,解析失败,原因:{e}',
+                                                                         'gmt_created': gmt_created})
 
         # 是否解析标签成功
         if data.get('mtlTag') == '':
             return Response(status=status.HTTP_202_ACCEPTED, data={'code': status.HTTP_202_ACCEPTED,
-                                                                   'msg': '不需要解析的数据或未解析成功'})
+                                                                   'msg': '不需要解析的数据或未解析成功',
+                                                                   'gmt_created': gmt_created})
 
         data['MSG_ID'] = request.GET.get('msg_id')
 
@@ -63,4 +72,5 @@ class MessageTagListViewSet(viewsets.ViewSet):
         # 保存到数据库
         serializer.save()
 
-        return Response(status=status.HTTP_200_OK, data={'code': status.HTTP_201_CREATED, 'msg': '保存成功'})
+        return Response(status=status.HTTP_200_OK, data={'code': status.HTTP_201_CREATED, 'msg': '保存成功',
+                                                         'gmt_created': gmt_created})

@@ -4,9 +4,9 @@ services:
     restart: unless-stopped
     image: django:4.1
     # for producation
-    command: gunicorn dj_api_luohu.wsgi:application --workers 3 --bind :80
+    command: gunicorn dj_api_luohu.wsgi:application --workers 10 --bind :80
     #    for beta
-    #    command: python manage.py runserver 0.0.0.0:80
+#    command: python manage.py runserver 0.0.0.0:80
     container_name: api-django-dev
     hostname: api.esb.alsoapp.com
 #    ports:
@@ -14,7 +14,7 @@ services:
     environment:
       - TZ=Asia/Shanghai
     volumes:
-      - /d/pycharm/dj_api_luohu:/opt/app
+#      - /d/pycharm/dj_api_luohu:/opt/app
       - data_static_api:/opt/app/assets
     env_file:
       - ./config/.env
@@ -30,9 +30,9 @@ services:
    environment:
     - TZ=Asia/Shanghai
    volumes:
-    - ./config/nginx.conf:/etc/nginx/conf.d/app_nginx.conf
     - data_static_api:/opt/app/static
-    - data_nginx_log_api:/var/log/nginx
+#    - ./config/nginx.conf:/etc/nginx/conf.d/app_nginx.conf
+#    - data_nginx_log_api:/var/log/nginx
 
 volumes:
   data_static_api:

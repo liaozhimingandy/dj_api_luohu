@@ -22,7 +22,7 @@ class CommonParse:
         """
         根据消息体来解析数据
         """
-        mtlTag, mtlText = '', ''
+        tag_msg, tag_comment = '', ''
 
         server_code = data.get('service').get('serviceCode')
 
@@ -30,14 +30,26 @@ class CommonParse:
         if server_code in ('S0038', 'S0039'):
             for d in data.get('message').get('LAB_APPLY'):
                 if d.get('DATA_ELEMENT_EN_NAME', '') == 'BAR_CODE':
-                    mtlTag = d.get('DATA_ELEMENT_VALUE', '')
-                    mtlText = d.get('DATA_ELEMENT_NAME', '')
+                    tag_msg = d.get('DATA_ELEMENT_VALUE', '')
+                    tag_comment = d.get('DATA_ELEMENT_NAME', '')
 
         # 检验申请单查询
-        elif server_code in ('S0040', ):
+        elif server_code in ('S0040',):
             for d in data.get('query').get('LAB_APPLY'):
                 if d.get('DATA_ELEMENT_EN_NAME', '') == 'BAR_CODE':
-                    mtlTag = d.get('DATA_ELEMENT_VALUE', '')
-                    mtlText = d.get('DATA_ELEMENT_NAME', '')
+                    tag_msg = d.get('DATA_ELEMENT_VALUE', '')
+                    tag_comment = d.get('DATA_ELEMENT_NAME', '')
+        # 检查申请单信息新增/更新
+        elif server_code in ('S0041', 'S0042'):
+            for d in data.get('message', '').get('EXAM_APPLY'):
+                if d.get('DATA_ELEMENT_EN_NAME', '') == 'PATIENT_ID':
+                    tag_msg = d.get('DATA_ELEMENT_VALUE', '')
+                    tag_comment = d.get('DATA_ELEMENT_NAME', '')
+        # 检查申请查询
+        elif server_code in ('S0043', ):
+            for d in data.get('query').get('EXAM_APPLY'):
+                if d.get('DATA_ELEMENT_EN_NAME', '') == 'PATIENT_ID':
+                    tag_msg = d.get('DATA_ELEMENT_VALUE', '')
+                    tag_comment = d.get('DATA_ELEMENT_NAME', '')
 
-        return {'mtlTag': mtlTag, 'mtlText': mtlText}
+        return {'mtlTag': tag_msg, 'mtlText': tag_comment}

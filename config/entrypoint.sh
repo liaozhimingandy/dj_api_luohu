@@ -6,3 +6,4 @@ python manage.py makemigrations
 python manage.py migrate
 
 exec "$@"
+# 文件编码必须是unix; set ff=unix
