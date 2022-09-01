@@ -7,6 +7,7 @@ from django.shortcuts import render
 # Create your views here.
 from drf_yasg2 import openapi
 from drf_yasg2.utils import swagger_auto_schema
+from pymssql import OperationalError
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status, viewsets
@@ -57,20 +58,22 @@ class MessageTagListViewSet(viewsets.ViewSet):
                                                                          'msg': f'意外的json结构,解析失败,原因:{e}',
                                                                          'gmt_created': gmt_created})
 
-        # 是否解析标签成功
-        if data.get('mtlTag') == '':
-            return Response(status=status.HTTP_202_ACCEPTED, data={'code': status.HTTP_202_ACCEPTED,
-                                                                   'msg': '不需要解析的数据或未解析成功',
-                                                                   'gmt_created': gmt_created})
+        # 获取消息唯一id
+        msg_id = request.GET.get('msg_id')
 
-        data['MSG_ID'] = request.GET.get('msg_id')
-
-        # 反序列化
-        serializer = MessageTagListsSerializer(data=data)
-        serializer.is_valid(raise_exception=True)
-
-        # 保存到数据库
-        serializer.save()
+        # 批量反序列化,
+        if data and isinstance(data, list):
+            for item in data:
+                item['MSG_ID'] = msg_id
+                serializer = MessageTagListsSerializer(data=item)
+                serializer.is_valid(raise_exception=True)
+                # 保存到数据库
+                try:
+                    serializer.save()
+                except (OperationalError, ) as e:
+                    return Response(status=status.HTTP_503_SERVICE_UNAVAILABLE,
+                                    data={'code': status.HTTP_503_SERVICE_UNAVAILABLE, 'msg': f'数据库连接失败->{e}',
+                                          'gmt_created': gmt_created})
 
         return Response(status=status.HTTP_200_OK, data={'code': status.HTTP_201_CREATED, 'msg': '保存成功',
                                                          'gmt_created': gmt_created})

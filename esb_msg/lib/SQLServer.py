@@ -14,7 +14,8 @@ class SQLServer:
         # 得到数据库连接信息，返回conn.cursor()
         if not self.database:
             raise (NameError, "没有设置数据库信息")
-        self.conn = pymssql.connect(server=self.server, user=self.user, password=self.password, database=self.database)
+        self.conn = pymssql.connect(server=self.server, user=self.user, password=self.password,
+                                    database=self.database, login_timeout=3)
         cur = self.conn.cursor()
         if not cur:
             raise (NameError, "连接数据库失败")  # 将DBC信息赋值给cur
@@ -51,8 +52,8 @@ def main():
     msg = SQLServer(server="172.16.33.181", user="sa", password="Knt2020@lh", database="ESB_MSG-B")
     result = msg.ExecQuery(
         "SELECT TOP 1 Value FROM t_Security_Code WHERE Mobile = '18501007700' ORDER BY InsertTime DESC")
-    for (Value) in result:
-        print(Value)
+    for (item) in result:
+        print(item)
 
 
 if __name__ == '__main__':
