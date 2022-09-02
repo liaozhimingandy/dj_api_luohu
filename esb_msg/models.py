@@ -24,9 +24,9 @@ class MessageTagList(models.Model):
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         """重写保存逻辑"""
         # 使用指定数据库保存数据
-        using = 'esb_msg'
+        # using = 'esb_msg'
         # super().save(force_insert, force_update, using=using, update_fields=None)
         sql = 'insert into MessageTagList(MSG_ID, mtlTag, mtlText, gmt_created) values(%s, %s, %s, %s)'
         value = (self.MSG_ID, self.mtlTag, self.mtlText, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-        mssql.ExecUpdate(sql, value)
+        mssql.exec_update(sql, value)
         return
