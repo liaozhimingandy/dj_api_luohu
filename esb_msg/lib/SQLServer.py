@@ -22,7 +22,7 @@ class SQLServer:
         # 连接不存在时创建,明显提高速度
         try:
             self.conn = pymssql.connect(server=self.server, user=self.user, password=self.password,
-                                        database=self.database, login_timeout=3)
+                                        database=self.database, login_timeout=3, timeout=30, appname='alsoapp.com')
         except (MSSQLDatabaseException, OperationalError) as e:
             raise MSSQLDatabaseException("连接数据库失败")
 
