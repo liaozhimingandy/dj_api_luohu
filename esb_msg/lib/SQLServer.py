@@ -54,6 +54,7 @@ class SQLServer:
 
     def __del__(self):
         """对象销毁时触发"""
+
         # self.pool.close()
         print('数据库连接管理器对象已销毁')
 

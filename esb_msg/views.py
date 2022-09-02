@@ -55,7 +55,12 @@ class MessageTagListViewSet(viewsets.ViewSet):
 
         # 判断消息是否已处理
         sql = f"select count(1) [count] from MessageTagList(nolock) where msg_id='{msg_id}'"
-        count = mssql.exec_query(sql)[0][0]
+        try:
+            count = mssql.exec_query(sql)[0][0]
+        except (OperationalError, IntegrityError) as e:
+            return Response(status=status.HTTP_503_SERVICE_UNAVAILABLE,
+                            data={'code': status.HTTP_503_SERVICE_UNAVAILABLE, 'msg': f'数据库处理失败->{e}',
+                                  'gmt_created': gmt_created})
         if count:
             return Response(status=status.HTTP_202_ACCEPTED, data={'code': status.HTTP_202_ACCEPTED,
                                                                    'msg': '已处理过的消息,不再处理',
