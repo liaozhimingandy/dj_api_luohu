@@ -15,7 +15,7 @@
 # ======================================================================
 from rest_framework import serializers
 
-from .models import MessageTagList
+from .models import MessageTagList, Service, Receiver
 
 
 class MessageTagListsSerializer(serializers.ModelSerializer):
@@ -29,3 +29,13 @@ class MessageTagListsSerializer(serializers.ModelSerializer):
         return super().save(**kwargs)
 
 
+class ServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Service
+        fields = "__all__"
+
+
+class ReceiverSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Receiver
+        fields = "__all__"

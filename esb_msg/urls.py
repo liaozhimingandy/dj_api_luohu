@@ -17,11 +17,13 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from .views import demo, MessageTagListViewSet
+from .views import demo, MessageTagListViewSet, ReceiverViewSet, ServiceViewSet
 
 # api根路由
 router = DefaultRouter()
 router.register(r'MessageTagList', MessageTagListViewSet)
+router.register(r'service', ServiceViewSet)
+router.register(r'receiver', ReceiverViewSet)
 
 urlpatterns = [
     # path('/', admin.site.urls),

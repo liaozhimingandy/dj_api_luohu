@@ -13,8 +13,8 @@ from rest_framework.response import Response
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 
-from .models import MessageTagList, mssql
-from .serializer import MessageTagListsSerializer
+from .models import MessageTagList, mssql, Receiver, Service
+from .serializer import MessageTagListsSerializer, ServiceSerializer, ReceiverSerializer
 
 from .utils import CommonParse
 
@@ -25,6 +25,16 @@ def demo(request):
     return Response(data)
 
 
+class ServiceViewSet(viewsets.ModelViewSet):
+    queryset = Service.objects.all()
+    serializer_class = ServiceSerializer
+
+
+class ReceiverViewSet(viewsets.ModelViewSet):
+    queryset = Receiver.objects.all()
+    serializer_class = ReceiverSerializer
+
+
 class MessageTagListViewSet(viewsets.ViewSet):
     queryset = MessageTagList.objects.all()
     serializer_class = MessageTagListsSerializer
@@ -32,7 +42,7 @@ class MessageTagListViewSet(viewsets.ViewSet):
     @swagger_auto_schema(
         operation_id='make_tag_for_msg',
         operation_summary='消息标签',
-        operation_description='为消息并且解析出标签',
+        operation_description='为消息解析出标签并且保存',
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             description='交互消息体'

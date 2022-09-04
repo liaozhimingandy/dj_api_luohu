@@ -4,3 +4,4 @@ venv/*
 */assets/
 *.sqlite3
 
+esb_msg/migrations/0003_remove_receiver_service_id_service_receiver_id.py
