@@ -32,19 +32,6 @@ class MessageTagList(models.Model):
         return
 
 
-class Receiver(models.Model):
-    id = models.BigAutoField(primary_key=True, verbose_name='主键id', help_text='主键id')
-    value = models.CharField(null=False, blank=False, max_length=8, verbose_name='接收方id', help_text='接收方id')
-    comment = models.CharField(null=False, blank=False, max_length=64, verbose_name='接收方代码', help_text='接收方代码')
-    desc = models.CharField(null=False, blank=False, max_length=64, verbose_name='接收方名称', help_text='接收方名称')
-    router_id = models.CharField(null=False, blank=False, max_length=64, verbose_name='路由id', help_text='路由id')
-    gmt_created = models.DateTimeField(null=False, blank=False, auto_now_add=True, verbose_name='创建时间',
-                                       help_text='创建时间')
-
-    class Meta:
-        db_table = 'esb_receiver'
-
-
 class Service(models.Model):
     id = models.BigAutoField(primary_key=True, verbose_name='主键id', help_text='主键id')
     value_service = models.CharField(null=False, blank=False, max_length=8, verbose_name='服务代码',
@@ -59,7 +46,24 @@ class Service(models.Model):
                                     help_text='查询标识')
     gmt_created = models.DateTimeField(null=False, blank=False, auto_now_add=True, verbose_name='创建时间',
                                        help_text='创建时间')
-    receiver_id = models.ManyToManyField(Receiver, null=True)
 
     class Meta:
         db_table = 'esb_service'
+        verbose_name = "消息服务"
+        verbose_name_plural = verbose_name
+
+
+class Receiver(models.Model):
+    id = models.BigAutoField(primary_key=True, verbose_name='主键id', help_text='主键id')
+    value = models.CharField(null=False, blank=False, max_length=8, verbose_name='接收方id', help_text='接收方id')
+    comment = models.CharField(null=False, blank=False, max_length=64, verbose_name='接收方代码', help_text='接收方代码')
+    desc = models.CharField(null=False, blank=False, max_length=64, verbose_name='接收方名称', help_text='接收方名称')
+    router_id = models.CharField(null=False, blank=False, max_length=64, verbose_name='路由id', help_text='路由id')
+    gmt_created = models.DateTimeField(null=False, blank=False, auto_now_add=True, verbose_name='创建时间',
+                                       help_text='创建时间')
+    service_id = models.ManyToManyField(Service, null=True, verbose_name='订阅的服务', help_text='订阅服务列表')
+
+    class Meta:
+        db_table = 'esb_receiver'
+        verbose_name = "系统厂商"
+        verbose_name_plural = verbose_name

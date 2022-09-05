@@ -82,10 +82,30 @@ WSGI_APPLICATION = 'dj_api_luohu.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # },
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',  # 数据库引擎
+        'NAME': 'esb',  # 数据库名字
+        'USER': 'root',  # 用户名
+        'PASSWORD': 'superset',  # 密码
+        'HOST': '172.16.33.188',  # HOST
+        'PORT': '3306',  # 端口
+        'OPTIONS': {'charset': 'utf8mb4'},  # 打开数据库 编码格式 ——解决4字节表情无法储存问题
     },
+    # 'esb': {
+    #     'ENGINE': 'mssql',
+    #     'NAME': 'ESB',
+    #     'USER': 'caradigm',
+    #     'PASSWORD': 'Knt2020@lh',
+    #     'HOST': '172.16.33.183',
+    #     'PORT': '',
+    #     'OPTIONS': {
+    #         'driver': 'ODBC Driver 17 for SQL Server',
+    #     },
+    # },
 }
 
 # Password validation
@@ -162,6 +182,6 @@ REST_FRAMEWORK = {
 #     # >python manage.py makemigrations esb_msg
 #     # >python manage.py migrate esb_msg --database=esb_msg
 #     # 关联数据库:
-#     # 'app_name':'database_name',
-#     'esb_msg': 'esb_msg',
+#     'app_name': 'database_name',
+#     'esb_msg': 'esb',
 # }

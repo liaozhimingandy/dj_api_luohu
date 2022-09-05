@@ -28,7 +28,8 @@ class CommonParse:
         # 检验申请单信息
         if server_code in ('S0038', 'S0039'):
             for d in data.get('message').get('LAB_APPLY'):
-                if d.get('DATA_ELEMENT_EN_NAME', '') in ('BAR_CODE', 'LAB_APPLY_NO'):
+                if d.get('DATA_ELEMENT_VALUE', '') != '' and d.get('DATA_ELEMENT_EN_NAME', '') \
+                        in ('BAR_CODE', 'LAB_APPLY_NO'):
                     tag = dict()
                     tag['mtlTag'] = d.get('DATA_ELEMENT_VALUE', '')
                     tag['mtlText'] = d.get('DATA_ELEMENT_NAME', '')
@@ -37,7 +38,7 @@ class CommonParse:
         # 检验申请单查询
         elif server_code in ('S0040',):
             for d in data.get('query').get('LAB_APPLY'):
-                if d.get('DATA_ELEMENT_EN_NAME', '') == 'BAR_CODE':
+                if d.get('DATA_ELEMENT_VALUE', '') != '' and d.get('DATA_ELEMENT_EN_NAME', '') == 'BAR_CODE':
                     tag = dict()
                     tag['mtlTag'] = d.get('DATA_ELEMENT_VALUE', '')
                     tag['mtlText'] = d.get('DATA_ELEMENT_NAME', '')
@@ -46,7 +47,8 @@ class CommonParse:
         # 检查申请单信息新增/更新
         elif server_code in ('S0041', 'S0042'):
             for d in data.get('message', '').get('EXAM_APPLY'):
-                if d.get('DATA_ELEMENT_EN_NAME', '') in ('PATIENT_ID', 'EXAM_APPLY_NO'):
+                if d.get('DATA_ELEMENT_VALUE', '') != '' \
+                        and d.get('DATA_ELEMENT_EN_NAME', '') in ('PATIENT_ID', 'EXAM_APPLY_NO'):
                     tag = dict()
                     tag['mtlTag'] = d.get('DATA_ELEMENT_VALUE', '')
                     tag['mtlText'] = d.get('DATA_ELEMENT_NAME', '')
@@ -55,7 +57,7 @@ class CommonParse:
         # 检查申请查询
         elif server_code in ('S0043', ):
             for d in data.get('query').get('EXAM_APPLY'):
-                if d.get('DATA_ELEMENT_EN_NAME', '') == 'PATIENT_ID':
+                if d.get('DATA_ELEMENT_VALUE', '') != '' and d.get('DATA_ELEMENT_EN_NAME', '') == 'PATIENT_ID':
                     tag = dict()
                     tag['mtlTag'] = d.get('DATA_ELEMENT_VALUE', '')
                     tag['mtlText'] = d.get('DATA_ELEMENT_NAME', '')
