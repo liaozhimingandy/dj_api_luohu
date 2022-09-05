@@ -44,4 +44,6 @@ class ReceiverAdmin(admin.ModelAdmin):
 
     # 侧边过滤器
     list_filter = ['id', 'value', 'comment']
+    filter_horizontal = ('service_id', )
+
 

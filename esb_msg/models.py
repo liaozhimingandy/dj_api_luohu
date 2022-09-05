@@ -47,6 +47,9 @@ class Service(models.Model):
     gmt_created = models.DateTimeField(null=False, blank=False, auto_now_add=True, verbose_name='创建时间',
                                        help_text='创建时间')
 
+    def __str__(self):
+        return f'{self.comment_event}({self.value_event})'
+
     class Meta:
         db_table = 'esb_service'
         verbose_name = "消息服务"
@@ -61,7 +64,7 @@ class Receiver(models.Model):
     router_id = models.CharField(null=False, blank=False, max_length=64, verbose_name='路由id', help_text='路由id')
     gmt_created = models.DateTimeField(null=False, blank=False, auto_now_add=True, verbose_name='创建时间',
                                        help_text='创建时间')
-    service_id = models.ManyToManyField(Service, null=True, verbose_name='订阅的服务', help_text='订阅服务列表')
+    service_id = models.ManyToManyField(Service, verbose_name='订阅的服务', help_text='订阅服务列表', blank=True)
 
     class Meta:
         db_table = 'esb_receiver'

@@ -30,12 +30,16 @@ class MessageTagListsSerializer(serializers.ModelSerializer):
 
 
 class ServiceSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Service
         fields = "__all__"
 
 
 class ReceiverSerializer(serializers.ModelSerializer):
+    # service_id = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='service-detail')
+    service_id = ServiceSerializer(many=True, read_only=True)
+
     class Meta:
         model = Receiver
         fields = "__all__"
