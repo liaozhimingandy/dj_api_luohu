@@ -38,7 +38,7 @@ class Service(models.Model):
                                      help_text='服务代码')
     comment_service = models.CharField(null=False, blank=False, max_length=64, verbose_name='服务名称',
                                        help_text='服务名称')
-    value_event = models.CharField(null=False, blank=False, max_length=8, verbose_name='事件代码',
+    value_event = models.CharField(null=False, blank=False, unique=True, max_length=8, verbose_name='事件代码',
                                    help_text='事件代码')
     comment_event = models.CharField(null=False, blank=False, max_length=64, verbose_name='事件名称',
                                      help_text='事件名称')
@@ -48,7 +48,7 @@ class Service(models.Model):
                                        help_text='创建时间')
 
     def __str__(self):
-        return f'{self.comment_event}({self.value_event})'
+        return f'{self.comment_service}->{self.comment_event}({self.value_event})'
 
     class Meta:
         db_table = 'esb_service'
@@ -58,17 +58,18 @@ class Service(models.Model):
 
 class Receiver(models.Model):
     id = models.BigAutoField(primary_key=True, verbose_name='主键id', help_text='主键id')
-    value = models.CharField(null=False, blank=False, max_length=8, verbose_name='接收方id', help_text='接收方id')
+    value = models.CharField(null=False, unique=True, blank=False, max_length=8, verbose_name='接收方id', help_text='接收方id')
     comment = models.CharField(null=False, blank=False, max_length=64, verbose_name='接收方代码', help_text='接收方代码')
-    desc = models.CharField(null=False, blank=False, max_length=64, verbose_name='接收方名称', help_text='接收方名称')
+    show_name = models.CharField(null=False, blank=False, max_length=64, verbose_name='接收方名称', help_text='接收方名称')
     router_id = models.CharField(null=False, blank=False, max_length=64, verbose_name='路由id', help_text='建议使用代码id',
-                                 default='@com.alsoapp.esb.router.')
+                                 default='@com.alsoapp.esb.router.main.')
+    api = models.TextField(blank=True, max_length=128, verbose_name='接收方api地址', help_text='接收平台数据的地址')
     gmt_created = models.DateTimeField(null=False, blank=False, auto_now_add=True, verbose_name='创建时间',
                                        help_text='创建时间')
     service_id = models.ManyToManyField(Service, verbose_name='订阅的服务', help_text='订阅服务列表', blank=True)
 
     def __str__(self):
-        return f'{self.desc}({self.value})'
+        return f'{self.show_name}({self.value})'
 
     class Meta:
         db_table = 'esb_receiver'

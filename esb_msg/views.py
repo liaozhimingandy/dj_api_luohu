@@ -50,7 +50,7 @@ class MessageTagListViewSet(viewsets.ViewSet):
         manual_parameters=[
             openapi.Parameter('msg_id', openapi.IN_QUERY, description="消息id", type=openapi.TYPE_STRING, required=True)
         ],
-        responses={201: '已保存', 401: '未认证', 500: '服务器内部错误'}
+        responses={201: '已保存', 202: '数据已接收,可能未处理', 401: '未认证', 500: '服务器内部错误'}
     )
     @action(detail=False, methods=['POST'], name='make_tag')
     def make_tag_for_msg(self, request):
@@ -104,5 +104,15 @@ class MessageTagListViewSet(viewsets.ViewSet):
                             data={'code': status.HTTP_503_SERVICE_UNAVAILABLE, 'msg': f'数据库处理失败->{e}',
                                   'gmt_created': gmt_created})
 
+        return Response(status=status.HTTP_200_OK, data={'code': status.HTTP_201_CREATED, 'msg': '保存成功',
+                                                         'gmt_created': gmt_created})
+
+
+class MessageValid(viewsets.ViewSet):
+
+    @action(detail=False, methods=['POST'], name='valid_message')
+    def valid_message(self, request):
+        """对输入的消息进行校验"""
+        gmt_created = datetime.datetime.now(tz=pytz.timezone('Asia/Shanghai')).isoformat(sep='T', timespec='seconds')
         return Response(status=status.HTTP_200_OK, data={'code': status.HTTP_201_CREATED, 'msg': '保存成功',
                                                          'gmt_created': gmt_created})

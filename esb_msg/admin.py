@@ -25,11 +25,11 @@ class ServiceAdmin(admin.ModelAdmin):
 @admin.register(Receiver)
 class ReceiverAdmin(admin.ModelAdmin):
     # 列表页显示那些字段（列）
-    list_display = ['value', 'comment', 'desc', 'router_id']
+    list_display = ['value', 'comment', 'show_name', 'api']
     # 点击此字段可进行跳转详情页
     list_display_links = ['value', 'comment']
     # 搜索字段
-    search_fields = ['value', 'comment']
+    search_fields = ['value', 'comment', 'show_name']
     # 每页显示多少条记录
     list_per_page = 10
     # 排序
