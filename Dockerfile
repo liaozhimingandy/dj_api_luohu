@@ -12,7 +12,7 @@ WORKDIR /opt/app
 COPY . /opt/app
 
 RUN pip install -i https://mirrors.aliyun.com/pypi/simple/ -r requirements.txt || \
-    pip install -r requirements.txt
+    pip install -r requirements.txt 
 
 RUN ["chmod", "+x", "/opt/app/config/entrypoint.sh"]
 

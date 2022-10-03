@@ -16,6 +16,8 @@ services:
     volumes:
 #      - /d/pycharm/dj_api_luohu:/opt/app
       - data_static_api:/opt/app/assets
+      # 挂载项目路径到容器内
+      - ../dj_api_luohu:/opt/app
     env_file:
       - ./config/.env
 
@@ -31,7 +33,7 @@ services:
     - TZ=Asia/Shanghai
    volumes:
     - data_static_api:/opt/app/static
-#    - ./config/nginx.conf:/etc/nginx/conf.d/app_nginx.conf
+    - ./config/app_nginx.conf:/etc/nginx/conf.d/app_nginx.conf
 #    - data_nginx_log_api:/var/log/nginx
 
 volumes:
